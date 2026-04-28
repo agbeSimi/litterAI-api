@@ -21,6 +21,7 @@
         "symfony/expression-language": "7.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/http-client": "7.3.*",
         "symfony/property-access": "7.3.*",
         "symfony/property-info": "7.3.*",
         "symfony/runtime": "7.3.*",
@@ -81,6 +82,7 @@
         }
     },
     "require-dev": {
-        "doctrine/dbal": "^3"
+        "doctrine/dbal": "^3",
+        "friendsofphp/php-cs-fixer": "^3.95"
     }
 }
