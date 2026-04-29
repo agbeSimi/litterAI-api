@@ -39,14 +39,21 @@ class GroqProcessor implements ProcessorInterface
             return $data;
         }
 
+        // 1. On définit le rôle du prof (le message système)
+        $systemMessage = [['role' => 'system', 'content' => 'Tu es un tuteur de maths pour collegiens.']];
+
+        // 2. On prépare le nouveau message de l'élève
+        $currentQuestion = [['role' => 'user', 'content' => $data->question]];
+
+        // 3. ON FUSIONNE TOUT : Système + Historique (passé) + Question actuelle (présent)
+        // C'est ici que la "mémoire" se crée
+        $messagescomplets = array_merge($systemMessage, $data->listeMessages, $currentQuestion);
+
         // À partir d'ici, on sait que $data est un GroqPrompt
         // On prépare les données pour Groq
         $body = [
             'model' => 'llama-3.1-8b-instant',
-            'messages' => [
-                ['role' => 'system', 'content' => 'Tu es un tuteur de maths.'],
-                ['role' => 'user', 'content' => $data->question],
-            ],
+            'messages' => $messagescomplets,
         ];
 
         // On lance l'appel
@@ -60,9 +67,13 @@ class GroqProcessor implements ProcessorInterface
 
         // On récupère la réponse
         $result = $response->toArray();
-        // IMPORTANT : Vérifie que ta propriété dans GroqPrompt
-        // s'appelle bien "reponse" et non "response" (orthographe)
         $data->reponse = $result['choices'][0]['message']['content'];
+
+        // --- AJOUTE CES LIGNES ICI ---
+        // On ajoute la question actuelle à l'historique
+        $data->listeMessages[] = ['role' => 'user', 'content' => $data->question];
+        // On ajoute la réponse de l'IA à l'historique
+        $data->listeMessages[] = ['role' => 'assistant', 'content' => $data->reponse];
 
         return $data;
     }
