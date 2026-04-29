@@ -40,7 +40,7 @@ class GroqProcessor implements ProcessorInterface
         }
 
         // 1. On définit le rôle du prof (le message système)
-        $systemMessage = [['role' => 'system', 'content' => 'Tu es un tuteur de maths pour collegiens.']];
+        $systemMessage = [['role' => 'system', 'content' => 'Tu es un tuteur de maths pour collegiens qui parle de manière très simple et concis pour que les élèves te comprenne.']];
 
         // 2. On prépare le nouveau message de l'élève
         $currentQuestion = [['role' => 'user', 'content' => $data->question]];
