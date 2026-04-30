@@ -47,8 +47,7 @@ class GroqProcessor implements ProcessorInterface
 
         // 3. ON FUSIONNE TOUT : Système + Historique (passé) + Question actuelle (présent)
         // C'est ici que la "mémoire" se crée
-        $messagescomplets = array_merge($systemMessage, $data->listeMessages, $currentQuestion);
-
+        $messagescomplets = array_merge($systemMessage, $data->listeMessages, [['role' => 'user', 'content' => $data->question]]);
         // À partir d'ici, on sait que $data est un GroqPrompt
         // On prépare les données pour Groq
         $body = [
@@ -72,7 +71,6 @@ class GroqProcessor implements ProcessorInterface
         // --- AJOUTE CES LIGNES ICI ---
         // On ajoute la question actuelle à l'historique
         $data->listeMessages[] = ['role' => 'user', 'content' => $data->question];
-        // On ajoute la réponse de l'IA à l'historique
         $data->listeMessages[] = ['role' => 'assistant', 'content' => $data->reponse];
 
         return $data;
