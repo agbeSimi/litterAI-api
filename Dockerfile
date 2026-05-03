@@ -1,24 +1,19 @@
-# Utilise l'image PHP 8.2-fpm pour la performance
-FROM php:8.2-fpm
+# Utilise PHP 8.3 pour satisfaire les dépendances de ton projet
+FROM php:8.3-fpm
 
-# Installation des dépendances système minimales pour Symfony
 RUN apt-get update && apt-get install -y \
-    libicu-dev \
     git \
     unzip \
-    && docker-php-ext-install intl
+    libicu-dev \
+    libzip-dev \
+    && docker-php-ext-install intl zip
 
-# Installation de Composer pour gérer tes dépendances PHP
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-# Dossier de travail dans le conteneur
 WORKDIR /var/www
-
-# Copie l'intégralité du projet
 COPY . .
 
-# Installation des dépendances en mode production (plus rapide)
-RUN composer install --no-dev --optimize-autoloader
+# L'installation fonctionnera maintenant car la version de PHP est correcte
+RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --no-scripts
 
-# On donne les droits au serveur web sur les dossiers de cache et logs
 RUN chown -R www-data:www-data var/
