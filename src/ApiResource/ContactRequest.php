@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(),
     ]
 )]
+#[Post(processor: \App\state\ContactRequestProcessor::class)]
 class ContactRequest
 {
     #[Assert\NotBlank(message: 'Le nom est obligatoire.')]
