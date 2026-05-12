@@ -9,6 +9,8 @@ parameters:
     app.groq_api_key_3: '%env(GROQ_API_KEY_3)%'
     app.groq_api_key_4: '%env(GROQ_API_KEY_4)%'
     app.groq_api_key_5: '%env(GROQ_API_KEY_5)%'
+    app.mail_maths: '%env(MAIL_MATHS)%'
+    app.mail_tech: '%env(MAIL_TECH))%'
 
 services:
     # default configuration for services in *this* file
