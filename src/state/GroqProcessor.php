@@ -19,10 +19,27 @@ class GroqProcessor implements ProcessorInterface
     private HttpClientInterface $client;
     private string $apiKey;
 
-    public function __construct(HttpClientInterface $client, string $groqApiKey)
+    private array $apiKeys;
+
+    public function __construct(HttpClientInterface $client, string $groqApiKey,
+        string $groqApiKey2,
+        string $groqApiKey3,
+        string $groqApiKey4,
+        string $groqApiKey5)
     {
         $this->client = $client;
-        $this->apiKey = $groqApiKey;
+        $this->apiKeys = [$groqApiKey,
+            $groqApiKey2,
+            $groqApiKey3,
+            $groqApiKey4,
+            $groqApiKey5,
+        ];
+    }
+
+    public function getRandomApiKey(): string
+    {
+        $key = $this->apiKeys[array_rand($this->apiKeys)];
+        return $key ?: $this->apiKeys[0];
     }
 
     /**
@@ -79,9 +96,10 @@ class GroqProcessor implements ProcessorInterface
         ];
 
         // On lance l'appel
+        $randomKey = $this->getRandomApiKey();
         $response = $this->client->request('POST', 'https://api.groq.com/openai/v1/chat/completions', [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->apiKey,
+                'Authorization' => 'Bearer '.$randomKey,
                 'Content-Type' => 'application/json',
             ],
             'json' => $body,
