@@ -6,7 +6,7 @@ namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
-// Import indispensable pour la validation
+use App\state\ContactRequestProcessor;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,10 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     operations: [
-        new Post(),
+        new Post(
+            processor: ContactRequestProcessor::class
+        ),
     ]
 )]
-#[Post(processor: \App\state\ContactRequestProcessor::class)]
 class ContactRequest
 {
     #[Assert\NotBlank(message: 'Le nom est obligatoire.')]
