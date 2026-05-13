@@ -39,7 +39,7 @@ class ContactRequestProcessor implements ProcessorInterface
             $objet = $data->getObjet();
             $mailEnvoyer = null;
             if ('MATHS' === $data->getTypeRequete()) {
-                $mailDestinataire = $this->params->get('MAIL_MATHS');
+                $mailDestinataire = $this->params->get('app.mail_maths');
                 $mailEnvoyer = (new Email())
                     ->from('noreply@litterIA.com')
                     ->to($mailDestinataire)
@@ -53,7 +53,7 @@ class ContactRequestProcessor implements ProcessorInterface
                         $data->getNom(),
                         nl2br($data->getCommentaire())));
             } else {
-                $mailDestinataire = $this->params->get('MAIL_TECH');
+                $mailDestinataire = $this->params->get('app.mail_tech');
                 $mailEnvoyer = (new Email())
                     ->from('noreply@litterIA.com')
                     ->to($mailDestinataire)
