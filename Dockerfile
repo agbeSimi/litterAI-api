@@ -36,6 +36,7 @@ RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --no-scripts
 ENV APP_ENV=prod
 RUN php bin/console cache:clear --env=prod --no-warmup
 RUN php bin/console cache:warmup --env=prod
+RUN php bin/console assets:install public --env=prod
 
 RUN chown -R www-data:www-data /var/www/html
 
