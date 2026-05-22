@@ -11,7 +11,7 @@ use App\state\GroqProcessor;
 #[ApiResource(
     operations: [
         new Post(
-            uriTemplate: 'api/ia/groq',
+            uriTemplate: '/ia/groq',
             processor: GroqProcessor::class
         ),
     ])]
