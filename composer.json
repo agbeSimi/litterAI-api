@@ -85,6 +85,7 @@
     },
     "require-dev": {
         "doctrine/dbal": "^3",
+        "doctrine/doctrine-fixtures-bundle": "*",
         "friendsofphp/php-cs-fixer": "^3.95",
         "symfony/maker-bundle": "^1.67",
         "symfony/stopwatch": "7.3.*",
