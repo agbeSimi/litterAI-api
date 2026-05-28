@@ -34,6 +34,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $mailAcademique = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $codeVerif = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $dateExpiration = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $statutVerification = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -113,5 +125,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    public function getMailAcademique(): ?string
+    {
+        return $this->mailAcademique;
+    }
+
+    public function setMailAcademique(?string $mailAcademique): static
+    {
+        $this->mailAcademique = $mailAcademique;
+
+        return $this;
+    }
+
+    public function getCodeVerif(): ?string
+    {
+        return $this->codeVerif;
+    }
+
+    public function setCodeVerif(?string $codeVerif): static
+    {
+        $this->codeVerif = $codeVerif;
+
+        return $this;
+    }
+
+    public function getDateExpiration(): ?\DateTime
+    {
+        return $this->dateExpiration;
+    }
+
+    public function setDateExpiration(?\DateTime $dateExpiration): static
+    {
+        $this->dateExpiration = $dateExpiration;
+
+        return $this;
+    }
+
+    public function isStatutVerification(): ?bool
+    {
+        return $this->statutVerification;
+    }
+
+    public function setStatutVerification(?bool $statutVerification): static
+    {
+        $this->statutVerification = $statutVerification;
+
+        return $this;
     }
 }
