@@ -10,6 +10,12 @@ security:
                 class: App\Entity\User
                 property: login
     firewalls:
+        security:
+            firewalls:
+                api:
+                    pattern: ^/api
+                    stateless: true
+                    user_checker: App\Security\UserChecker
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
