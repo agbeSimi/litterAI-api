@@ -9,15 +9,24 @@ use App\state\UserProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
 #[ApiResource(
-    operations: new Post(
-        uriTemplate: '/register',
-        processor: UserProcessor::class
-    )
+    operations: [
+        new Post(
+            uriTemplate: '/register',
+            processor: UserProcessor::class
+        ),
+
+        new Post(
+            uriTemplate: '/verify-code',
+            denormalizationContext: ['groups' => ['user:verify']],
+            processor: UserVerificationProcessor::class
+        ),
+    ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -27,6 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['user:verify'])]
     private ?string $login = null;
 
     /**
@@ -45,6 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $mailAcademique = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:verify'])]
     private ?string $codeVerif = null;
 
     #[ORM\Column(nullable: true)]
