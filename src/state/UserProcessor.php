@@ -7,7 +7,9 @@ namespace App\state;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -18,7 +20,8 @@ class UserProcessor implements ProcessorInterface
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
         private UserPasswordHasherInterface $passwordHasher,
-        private MailerInterface $mailer)
+        private MailerInterface $mailer,
+        private JWTTokenManagerInterface $jwtManager, )
     {
     }
 
@@ -29,8 +32,9 @@ class UserProcessor implements ProcessorInterface
                 $hashedPassword = $this->passwordHasher->hashPassword($data, $data->getPassword());
                 $data->setPassword($hashedPassword);
             }
+            $isProf = in_array('ROLE_USER_PROF', $data->getRoles(), true);
 
-            if (in_array('ROLE_USER_PROF', $data->getRoles())) {
+            if ($isProf) {
                 $emailProf = $data->getMailAcademique();
                 if (!preg_match('/@(ac-[a-z]+|education)\.gouv?\.fr$/i', $emailProf)
                     || preg_match('/(eleve|etudiant|student|lycee|clg)/i', $emailProf)) {
@@ -53,9 +57,20 @@ class UserProcessor implements ProcessorInterface
             } else {
                 $data->setRoles(['ROLE_USER_ELEVE']);
                 $data->setStatutVerification(true);
-
-
             }
+            $user = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+
+            if (!$isProf) {
+                $token = $this->jwtManager->create($user);
+
+                // On renvoie une réponse personnalisée contenant le token
+                return new JsonResponse([
+                    'message' => 'Inscription et connexion réussies.',
+                    'token' => $token,
+                ], 201);
+            }
+
+            return $user;
         }
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
