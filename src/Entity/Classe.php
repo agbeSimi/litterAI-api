@@ -2,12 +2,20 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\ClasseRepository;
+use App\state\ClasseProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClasseRepository::class)]
+#[ApiResource(
+    operations: [
+        new Post(processor: ClasseProcessor::class),
+    ]
+)]
 class Classe
 {
     #[ORM\Id]
