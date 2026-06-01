@@ -10,12 +10,14 @@ use App\Entity\User;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
+        private UserPasswordHasherInterface $passwordHasher,
         private MailerInterface $mailer)
     {
     }
@@ -23,6 +25,11 @@ class UserProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         if ($data instanceof User) {
+            if ($data->getPassword()) {
+                $hashedPassword = $this->passwordHasher->hashPassword($data, $data->getPassword());
+                $data->setPassword($hashedPassword);
+            }
+
             if (in_array('ROLE_USER_PROF', $data->getRoles())) {
                 $emailProf = $data->getMailAcademique();
                 if (!preg_match('/@(ac-[a-z]+|education)\.gouv?\.fr$/i', $emailProf)
@@ -43,6 +50,11 @@ class UserProcessor implements ProcessorInterface
                     ->html('<p>Bonjour,</p><p>Voici votre code de vérification pour finaliser votre inscription : <strong>'.$codeVerification.'</strong></p><p>Ce code est valable pendant 15 minutes.</p>');
 
                 $this->mailer->send($email);
+            } else {
+                $data->setRoles(['ROLE_USER_ELEVE']);
+                $data->setStatutVerification(true);
+
+
             }
         }
 
