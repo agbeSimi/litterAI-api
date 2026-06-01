@@ -65,6 +65,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $statutVerification = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,6 +193,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatutVerification(?bool $statutVerification): static
     {
         $this->statutVerification = $statutVerification;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }
