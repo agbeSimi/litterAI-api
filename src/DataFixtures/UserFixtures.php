@@ -22,8 +22,8 @@ class UserFixtures extends Fixture
         $user = new User();
 
         // 2. On lui donne un pseudo et un rôle
-        $user->setLogin('eleve_test');
-        $user->setRoles(['ROLE_USER_ELEVE']);
+        $user->setLogin('admin');
+        $user->setRoles(['ROLE_ADMIN']);
 
         // 3. On crypte le mot de passe "1234" et on l'assigne
         $hashedPassword = $this->hasher->hashPassword($user, '1234');
