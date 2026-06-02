@@ -40,6 +40,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/verify-code, roles: PUBLIC_ACCESS }
+        - { path: ^/api/classes, roles: [USER_ROLE_PROFESSEUR, ROLE_ADMIN] }
         - { path: ^/api$, roles: PUBLIC_ACCESS, methods: [ GET ] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
