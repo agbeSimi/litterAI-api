@@ -12,6 +12,7 @@ use App\Repository\ClasseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ClasseRepository::class)]
 #[ApiResource(
@@ -42,18 +43,23 @@ class Classe
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['classe:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['classe:read', 'classe:write'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['classe:read'])]
     private ?string $nomPurifie = null;
 
     #[ORM\Column]
+    #[Groups(['classe:read', 'classe:write', 'classe:update'])]
     private ?int $effectif = null;
 
     #[ORM\ManyToOne(inversedBy: 'classes')]
+    #[Groups(['classe:read', 'classe:write'])]
     private ?User $professeur = null;
 
     /**
@@ -62,11 +68,12 @@ class Classe
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'classe')]
     private Collection $eleves;
 
-    #[ORM\Column]
-    private array $modulesAutoriser = [];
-
+    #[ORM\Column(type: 'json')]
+    #[Groups(['classe:read', 'classe:write', 'classe:update'])]
+    private array $modulesAutoriser = [1, 2, 3, 4];
     #[ORM\Column(length: 255)]
-    private ?string $modeApprentissage = null;
+    #[Groups(['classe:read', 'classe:write', 'classe:update'])]
+    private ?string $modeApprentissage = 'complet';
 
     public function __construct()
     {
