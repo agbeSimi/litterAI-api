@@ -37,13 +37,18 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        # 1. Les accès publics (aucune restriction)
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/verify-code, roles: PUBLIC_ACCESS }
-        - { path: ^/api/classes, roles: [USER_ROLE_PROFESSEUR, ROLE_ADMIN] }
-        - { path: ^/api/eleves, roles: [ ROLE_PROFESSEUR, ROLE_ADMIN ] }
         - { path: ^/api/ia/groq, roles: PUBLIC_ACCESS }
         - { path: ^/api$, roles: PUBLIC_ACCESS, methods: [ GET ] }
+
+        # 2. Les routes spécifiques restreintes par rôles
+        - { path: ^/api/classes, roles: [ ROLE_USER_PROFESSEUR, ROLE_ADMIN ] }
+        - { path: ^/api/eleves, roles: [ ROLE_USER_PROFESSEUR, ROLE_ADMIN ] }
+
+        # 3. La sécurité globale (tout le reste de l'API requiert d'être connecté)
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
