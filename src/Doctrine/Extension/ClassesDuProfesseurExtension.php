@@ -31,7 +31,7 @@ class ClassesDuProfesseurExtension implements QueryCollectionExtensionInterface
         }
 
         $user = $this->security->getUser();
-        if ($user && in_array('USER_ROLE_PROFESSEUR', $user->getRoles())) {
+        if ($user && in_array('ROLE_USER_PROFESSEUR', $user->getRoles())) {
             $rootAlias = $queryBuilder->getRootAliases()[0];
             $queryBuilder->andWhere($rootAlias.'.professeur = :prof');
             $queryBuilder->setParameter('prof', $user);
