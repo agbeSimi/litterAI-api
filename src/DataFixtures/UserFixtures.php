@@ -32,6 +32,19 @@ class UserFixtures extends Fixture
         // 4. On prépare la sauvegarde
         $manager->persist($user);
 
+        $userProf = new User();
+
+        $userProf->setLogin('prof');
+        $userProf->setRoles(['ROLE_USER_PROFESSEUR']);
+
+        // 3. On crypte le mot de passe "1234" et on l'assigne
+        $hashedPassword = $this->hasher->hashPassword($userProf, '1234prof');
+        $userProf->setPassword($hashedPassword);
+
+        // 4. On prépare la sauvegarde
+        $manager->persist($userProf);
+
+
         // 5. On envoie tout dans la base de données MariaDB
         $manager->flush();
     }

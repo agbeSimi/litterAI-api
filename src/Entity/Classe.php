@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\ClasseRepository;
+use App\state\ClasseProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,15 +26,16 @@ use Symfony\Component\Serializer\Attribute\Groups;
         ),
         new Post(
             denormalizationContext: ['groups' => ['classe:write']],
-            security: "is_granted('ROLE_PROFESSEUR') or is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_USER_PROFESSEUR') or is_granted('ROLE_ADMIN')",
+            processor: ClasseProcessor::class
         ),
         new Patch(
             denormalizationContext: ['groups' => ['classe:update']],
-            security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_PROFESSEUR') and object.getProfesseur() == user)",
+            security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER_PROFESSEUR') and object.getProfesseur() == user)",
             securityMessage: 'Vous ne pouvez modifier que vos propres classes.'
         ),
         new Delete(
-            security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_PROFESSEUR') and object.getProfesseur() == user)",
+            security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER_PROFESSEUR') and object.getProfesseur() == user)",
             securityMessage: 'Vous ne pouvez supprimer que vos propres classes.'
         ),
     ]
