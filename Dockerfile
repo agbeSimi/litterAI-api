@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
     && docker-php-ext-install intl zip pdo pdo_mysql
-
+    # && docker-php-ext-install intl zip pdo pdo_pgsql
 RUN a2enmod rewrite headers
 
 # ✅ Chemin hardcodé, pas de variable qui risque de ne pas s'interpoler
