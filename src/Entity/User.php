@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
+use App\state\MeProvider;
 use App\state\UserProcessor;
 use App\state\UserVerificationProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,6 +21,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
 #[ApiResource(
     operations: [
+        new Get(
+            uriTemplate: '/me',
+            normalizationContext: ['groups' => ['read:me']],
+            provider: MeProvider::class
+        ),
         new Post(
             uriTemplate: '/register',
             processor: UserProcessor::class
@@ -36,16 +43,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:me'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user:verify'])]
+    #[Groups(['user:verify', 'read:me'])]
     private ?string $login = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['read:me'])]
     private array $roles = [];
 
     /**
@@ -77,6 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $classes;
 
     #[ORM\ManyToOne(inversedBy: 'eleves')]
+    #[Groups(['read:me'])]
     private ?Classe $classe = null;
 
     public function __construct()

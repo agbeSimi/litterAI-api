@@ -49,7 +49,7 @@ class Classe
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['classe:read', 'classe:write'])]
+    #[Groups(['classe:read', 'classe:write', 'read:me'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 50)]
@@ -71,7 +71,7 @@ class Classe
     private Collection $eleves;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(['classe:read', 'classe:write', 'classe:update'])]
+    #[Groups(['classe:read', 'classe:write', 'classe:update', 'read:me'])]
     private array $modulesAutoriser = [1, 2, 3, 4];
     #[ORM\Column(length: 255)]
     #[Groups(['classe:read', 'classe:write', 'classe:update'])]
