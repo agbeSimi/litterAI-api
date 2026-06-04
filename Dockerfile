@@ -16,8 +16,7 @@ COPY . /var/www/html
 
 # Installation de Composer et des dépendances de production
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN composer install --no-dev --optimize-autoloader
-
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 # On donne les droits d'écriture à Apache sur les dossiers de cache et de logs de Symfony
 RUN chown -R www-data:www-data /var/www/html/var
 
