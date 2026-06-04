@@ -5,8 +5,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libicu-dev \
     libzip-dev \
-    # && docker-php-ext-install intl zip pdo pdo_mysql
-    && docker-php-ext-install intl zip pdo pdo_pgsql
+    && docker-php-ext-install intl zip pdo pdo_mysql
+    # && docker-php-ext-install intl zip pdo pdo_pgsql
 RUN a2enmod rewrite headers
 
 # ✅ Chemin hardcodé, pas de variable qui risque de ne pas s'interpoler
@@ -34,8 +34,10 @@ COPY . .
 RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --no-scripts
 
 ENV APP_ENV=prod
+RUN php bin/console cache:clear --env=prod --no-warmup
+RUN php bin/console cache:warmup --env=prod
+RUN php bin/console assets:install public --env=prod
+
 RUN chown -R www-data:www-data /var/www/html
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 80
-CMD ["docker-entrypoint.sh"]
