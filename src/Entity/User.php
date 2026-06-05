@@ -87,6 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'eleves')]
     #[Groups(['read:me'])]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Classe $classe = null;
 
     public function __construct()
